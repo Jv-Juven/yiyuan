@@ -35,6 +35,11 @@ module.exports = (grunt)->
 					"dist/js/index.js": ["src/index/index.coffee", "src/index/home.coffee"]
 				}
 			},
+			yiyuan: {
+				files: {
+					"dist/js/login.js": ["src/login/login.coffee"]
+				}
+			}
 			# glob_to_multiple: {
 			#     expand: true,
 			#     flatten: true,
@@ -61,6 +66,13 @@ module.exports = (grunt)->
 				files: {
 					"dist/css/index.css": ["src/stylus/index.styl", "src/stylus/home.styl"]
 					"dist/css/dev.css": "src/stylus/index.styl"
+				}
+			},
+			yiyuan: {
+				options: {},
+				files: {
+					"dist/common/common.css": ["src/common/layout.styl"],
+					"dist/css/login.css": ["src/login/login.styl"]
 				}
 			}
 		}
@@ -147,7 +159,10 @@ module.exports = (grunt)->
 	# 默认被执行的任务列表
 	grunt.registerTask "default","default tasks", ()->
 		grunt.task.run [
-			"watch"
+			"watch",
+			"clean",
+			"coffee:yiyuan",
+			"stylus:yiyuan"
 		]
 	grunt.registerTask "all", "all tasks", ()->
 		grunt.task.run [
