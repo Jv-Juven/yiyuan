@@ -26,5 +26,10 @@
 <body>
 	@section("body")
 	@show
+
+	@section("commonjs")
+	<script src="./../../dist/js/common.js"></script>
+	@show
+
 </body>
 </html>

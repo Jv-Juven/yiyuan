@@ -1,5 +1,8 @@
 
 module.exports = (grunt)->
+	
+	stringify = require 'stringify'
+	coffeeify = require 'coffeeify'
 
 	# 项目配置
 	grunt.initConfig {
@@ -36,8 +39,12 @@ module.exports = (grunt)->
 				}
 			},
 			yiyuan: {
+				options: {
+					bare: true
+				},
 				files: {
-					"dist/js/login.js": ["src/login/login.coffee"]
+					# "dist/js/login.js": ["src/login/login.coffee"],
+					"dist/js/common.js": ["src/common/layout.coffee", "src/login/login.coffee"]
 				}
 			}
 			# glob_to_multiple: {
@@ -48,6 +55,27 @@ module.exports = (grunt)->
 			#     dest: 'path/to/dest/',
 			#     ext: '.js'
 			# }
+		}
+
+		browserify: {
+			common:
+                options:
+                  preBundleCB: (b)->
+                    b.transform(coffeeify)
+                    b.transform(stringify({extensions: ['.hbs', '.html', '.tpl', '.txt']}))
+                expand: true
+                flatten: true
+                files: {
+                    'dist/js/common.js': ['src/common/layout.coffee','src/common/config.coffee'],
+                }
+            dist: {
+                files: {
+                  'dist/module.js': ['src/**/*.coffee']
+                },
+                options: {
+                  transform: ['coffeeify']
+                }
+              }
 		}
 
 		# 清除文件
@@ -113,39 +141,40 @@ module.exports = (grunt)->
 
 		# watch 监视文件的改动
 		watch:
-		    compile:
-		        options:
-		            livereload: true
-		        files: ['src/**/*.styl', 'src/**/*.coffee']
-		        tasks: ['stylus', 'coffee']
+			compile:
+				options:
+					livereload: true
+				files: ['src/**/*.styl', 'src/**/*.coffee']
+				tasks: ['stylus', 'coffee']
 
 
 
-        # browserify 可以让你像nodejs那样使用require()函数 注：若需使用请参考教程(https://www.npmjs.com/package/grunt-browserify)，并且需要配置该文件
-        # 这里有个例子：
-        # 将指定文件的依赖项加载到文件中，可类似nodejs的做法
+		# browserify 可以让你像nodejs那样使用require()函数 注：若需使用请参考教程(https://www.npmjs.com/package/grunt-browserify)，并且需要配置该文件
+		# 这里有个例子：
+		# 将指定文件的依赖项加载到文件中，可类似nodejs的做法
 
-        # stringify = require 'stringify'
-        # coffeeify = require 'coffeeify'
+		# stringify = require 'stringify'
+		# coffeeify = require 'coffeeify'
 
-        # browserify:
-        #     pages:
-        #         options:
-        #           preBundleCB: (b)->
-        #             b.transform(coffeeify)
-        #             b.transform(stringify({extensions: ['.hbs', '.html', '.tpl', '.txt']}))
-        #         expand: true
-        #         flatten: true
-        #         files: {
-        #             'dist/js/index.js': ['src/index/*.coffee']
-        #             'dist/js/itegral.js': ['src/itegral/*.coffee']
-        #         }
+		# browserify:
+		#     pages:
+		#         options:
+		#           preBundleCB: (b)->
+		#             b.transform(coffeeify)
+		#             b.transform(stringify({extensions: ['.hbs', '.html', '.tpl', '.txt']}))
+		#         expand: true
+		#         flatten: true
+		#         files: {
+		#             'dist/js/index.js': ['src/index/*.coffee']
+		#             'dist/js/itegral.js': ['src/itegral/*.coffee']
+		#         }
 
 
 	}
 
 
 	# 加载任务的插件
+	grunt.loadNpmTasks "grunt-browserify"
 	grunt.loadNpmTasks "grunt-contrib-uglify"
 	grunt.loadNpmTasks "grunt-contrib-coffee"
 	grunt.loadNpmTasks "grunt-contrib-clean"
@@ -159,10 +188,11 @@ module.exports = (grunt)->
 	# 默认被执行的任务列表
 	grunt.registerTask "default","default tasks", ()->
 		grunt.task.run [
-			"watch",
 			"clean",
-			"coffee:yiyuan",
-			"stylus:yiyuan"
+			# "coffee:yiyuan",
+			"stylus:yiyuan",
+			"browserify:dist",
+			"watch"
 		]
 	grunt.registerTask "all", "all tasks", ()->
 		grunt.task.run [
