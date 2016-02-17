@@ -44,7 +44,7 @@ module.exports = (grunt)->
 				},
 				files: {
 					# "dist/js/login.js": ["src/login/login.coffee"],
-					"dist/js/common.js": ["src/common/layout.coffee", "src/login/login.coffee"]
+					"dist/js/layout.js": ["src/common/layout.coffee"]
 				}
 			}
 			# glob_to_multiple: {
@@ -70,7 +70,7 @@ module.exports = (grunt)->
                 }
             dist: {
                 files: {
-                  'dist/module.js': ['src/**/*.coffee']
+                  "dist/js/layout.js": ["src/common/layout.coffee"]
                 },
                 options: {
                   transform: ['coffeeify']
@@ -97,10 +97,12 @@ module.exports = (grunt)->
 				}
 			},
 			yiyuan: {
-				options: {},
+				options: {
+					compress: false
+					},
 				files: {
-					"dist/common/common.css": ["src/common/layout.styl"],
-					"dist/css/login.css": ["src/login/login.styl"]
+					"dist/css/layout.css": ["src/common/layout.styl"],
+					# "dist/css/login.css": ["src/login/login.styl"]
 				}
 			}
 		}

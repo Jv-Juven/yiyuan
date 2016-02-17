@@ -22,13 +22,27 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 
 	<title>@yield("title", "羽园")</title>
+
+	@section("lib-css")
+	<link rel="stylesheet" href="./../../lib/css/bootstrap/bootstrap.css">
+	@show
+
+	@section("css")
+	<link rel="stylesheet" href="/dist/css/layout.css">
+	@show
+
 </head>
 <body>
 	@section("body")
 	@show
 
-	@section("commonjs")
-	<script src="./../../dist/js/common.js"></script>
+	@section("lib-js")
+	<script src="/lib/js/jquery/jquery-2.2.0.js"></script>
+	<script src="/lib/js/vue/vue.js"></script>
+	@show
+
+	@section("js")
+	<script src="/dist/js/layout.js"></script>
 	@show
 
 </body>
